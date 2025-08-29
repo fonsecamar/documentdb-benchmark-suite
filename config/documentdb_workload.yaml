@@ -1,0 +1,139 @@
+tasks:
+  # Insert Example
+  - taskName: insert_example
+    taskWeight: 65
+    command:
+      type: insert
+      database: lab
+      collection: cart
+      batchSize: 1
+      parameters:
+        - name: "@player_id"
+          type: random_int
+          start: 1
+          end: 1000000
+        - name: "@ticket_id"
+          type: guid
+        - name: "@ticket_date"
+          type: datetime
+        - name: "@contest"
+          type: random_int
+          start: 1
+          end: 1000
+        - name: "@numbers"
+          type: constant_string
+          value: "[1,2,3,4,5,6]"
+      document:
+        player_id: "@player_id"
+        ticket_id: "@ticket_id"
+        ticket_date: "@ticket_date"
+        contest: "@contest"
+        numbers: "@numbers"
+
+  # Replace Example
+  - taskName: replace_example
+    taskWeight: 0
+    command:
+      type: replace
+      database: lab
+      collection: cart
+      parameters:
+        - name: "@ticket_id"
+          type: guid
+        - name: "@player_id"
+          type: random_int
+          start: 1
+          end: 1000000
+        - name: "@ticket_date"
+          type: datetime
+        - name: "@contest"
+          type: random_int
+          start: 1
+          end: 1000
+        - name: "@numbers"
+          type: constant_string
+          value: "[1,2,3,4,5,6]"
+      filter:
+        ticket_id: "@ticket_id"
+      replacement:
+        player_id: "@player_id"
+        ticket_id: "@ticket_id"
+        ticket_date: "@ticket_date"
+        contest: "@contest"
+        numbers: "@numbers"
+
+  # Update Example
+  - taskName: update_example
+    taskWeight: 0
+    command:
+      type: update
+      database: lab
+      collection: cart
+      parameters:
+        - name: "@player_id"
+          type: random_int
+          start: 1
+          end: 1000000
+        - name: "@timestamp"
+          type: datetime
+      filter:
+        player_id: "@player_id"
+      update:
+        $set:
+          contest: 999
+          ticket_date: "@timestamp"
+
+  # Delete Example
+  - taskName: delete_example
+    taskWeight: 0
+    command:
+      type: delete
+      database: lab
+      collection: cart
+      parameters:
+        - name: "@player_id"
+          type: random_int
+          start: 1
+          end: 1000000
+      filter:
+        player_id: "@player_id"
+
+  # Find Example
+  - taskName: find_example
+    taskWeight: 30
+    command:
+      type: find
+      database: lab
+      collection: cart
+      parameters:
+        - name: "@player_id"
+          type: random_int
+          start: 1
+          end: 1000000
+      filter:
+        player_id: "@player_id"
+      projection:
+        player_id: 1
+        ticket_id: 1
+        _id: 0
+      limit: 10
+
+  # Aggregation Pipeline Example
+  - taskName: aggregation_example
+    taskWeight: 5
+    command:
+      type: aggregate
+      database: lab
+      collection: cart
+      parameters:
+        - name: "@contest_min"
+          type: constant_int
+          value: 1
+        - name: "@contest_max"
+          type: constant_int
+          value: 1000
+      pipeline:
+        - { $match: { contest: { $gte: "@contest_min", $lte: "@contest_max" } } }
+        - { $group: { _id: "$contest", total: { $sum: 1 } } }
+        - { $sort: { total: -1 } }
+        - { $limit: 5 }
