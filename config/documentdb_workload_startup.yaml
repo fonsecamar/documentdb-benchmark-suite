@@ -1,0 +1,17 @@
+databases:
+  - name: lab
+    collections:
+      - name: cart
+        shardKey: player_id
+        indexes:
+          - name: idx_player_ticket
+            keys:
+              player_id: 1
+              ticket_id: 1
+            options:
+              unique: true
+          - name: ttl_index
+            keys:
+              ticket_date: 1
+            options:
+              expireAfterSeconds: 86400

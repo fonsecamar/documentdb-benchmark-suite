@@ -1,3 +1,4 @@
+runStartUpFrequency: Once
 tasks:
   # Insert Example
   - taskName: insert_example
@@ -14,6 +15,7 @@ tasks:
           end: 1000000
         - name: "@ticket_id"
           type: guid
+          as: string
         - name: "@ticket_date"
           type: datetime
         - name: "@contest"
@@ -21,7 +23,7 @@ tasks:
           start: 1
           end: 1000
         - name: "@numbers"
-          type: constant_string
+          type: constant
           value: "[1,2,3,4,5,6]"
       document:
         player_id: "@player_id"
@@ -40,6 +42,7 @@ tasks:
       parameters:
         - name: "@ticket_id"
           type: guid
+          as: string
         - name: "@player_id"
           type: random_int
           start: 1
@@ -51,12 +54,12 @@ tasks:
           start: 1
           end: 1000
         - name: "@numbers"
-          type: constant_string
+          type: constant
           value: "[1,2,3,4,5,6]"
       filter:
-        ticket_id: "@ticket_id"
-      replacement:
         player_id: "@player_id"
+        ticket_id: "@ticket_id"
+      replacement:        
         ticket_id: "@ticket_id"
         ticket_date: "@ticket_date"
         contest: "@contest"
@@ -127,11 +130,13 @@ tasks:
       collection: cart
       parameters:
         - name: "@contest_min"
-          type: constant_int
+          type: constant
           value: 1
+          as: int
         - name: "@contest_max"
-          type: constant_int
+          type: constant
           value: 1000
+          as: int
       pipeline:
         - { $match: { contest: { $gte: "@contest_min", $lte: "@contest_max" } } }
         - { $group: { _id: "$contest", total: { $sum: 1 } } }

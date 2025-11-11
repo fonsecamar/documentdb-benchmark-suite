@@ -62,7 +62,7 @@ def init_settings() -> List[Settings]:
         return settings_list
 
     for config_file in config_dir.glob('*'):
-        if config_file.suffix.lower() not in ['.json', '.yaml', '.yml']:
+        if config_file.suffix.lower() not in ['.json', '.yaml', '.yml'] or config_file.stem.lower().endswith('_startup'):
             continue
         try:
             with open(config_file, 'r', encoding='utf-8') as file:

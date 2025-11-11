@@ -11,13 +11,14 @@ all_profiles = settings.init_settings()
 
 @events.init_command_line_parser.add_listener
 def _(parser):
-    parser.add_argument("--documentdb-connection-string", type=str, is_required=True, is_secret=True)
+    parser.add_argument("--documentdb-connection-string", type=str, is_required=True, is_secret=True, help="Format: mongodb+srv://<username>:<password>@<cluster-address>/?tls=true&authMechanism=SCRAM-SHA-256&retrywrites=false&maxIdleTimeMS=120000")
 
 @events.test_start.add_listener
 def on_test_start(environment, **kwargs):
     if isinstance(environment.runner, MasterRunner) or isinstance(environment.runner, LocalRunner):
         for uc in environment.user_classes:
             if uc.runStartUp:
+                environment.runner.state = "running"
                 logging.info(f"Running startup for user class: {uc.__name__}")
                 uc(environment).run_startup()
             else:

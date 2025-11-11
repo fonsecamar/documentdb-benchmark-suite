@@ -75,6 +75,7 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2025-01-01' = {
     accessTier: 'Hot'
     minimumTlsVersion: 'TLS1_2'
     allowBlobPublicAccess: false
+    allowSharedKeyAccess: true
     networkAcls: {
       bypass: 'AzureServices'
       defaultAction: 'Allow'
@@ -114,6 +115,7 @@ resource aks 'Microsoft.ContainerService/managedClusters@2025-05-01' = {
   }
   properties: {
     dnsPrefix: '${aksName}-dns'
+    kubernetesVersion: ''  // Use default latest version
     agentPoolProfiles: [
       // System node pool
       {
